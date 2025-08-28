@@ -1,19 +1,26 @@
 version: 2.1
+
 jobs:
   build:
     docker:
-      - image: node:18
-    working_directory: ~/repo
+      - image: node:18   # Image Docker officielle Node 18
+    working_directory: ~/repo/StudentManager  # <-- Mettre le chemin vers ton projet
     steps:
-      - checkout
+      - checkout  # Récupère le code depuis GitHub
+
+      # Installer les dépendances Node
       - run:
           name: Install dependencies
           command: npm install
+
+      # Installer les dépendances Android (Gradle wrapper)
       - run:
           name: Build Android APK
           command: |
             cd android
             ./gradlew assembleRelease
+
+      # Sauvegarder l’APK pour téléchargement
       - store_artifacts:
           path: android/app/build/outputs/apk/release/app-release.apk
           destination: app-release.apk
